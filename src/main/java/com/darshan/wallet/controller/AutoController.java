@@ -27,12 +27,9 @@ public class AutoController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        userService.loginUser(request);
+        String token = userService.loginUser(request);
 
-        return ResponseEntity.ok("Login successful");
+        return ResponseEntity.ok(token);
     }
-    
-    
-    
-    
+      
 }

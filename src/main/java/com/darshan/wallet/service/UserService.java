@@ -6,6 +6,8 @@ import com.darshan.wallet.entity.User;
 import com.darshan.wallet.entity.Wallet;
 import com.darshan.wallet.repository.UserRepository;
 import com.darshan.wallet.repository.WalletRepository;
+import com.darshan.wallet.security.JwtUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public void registerUser(RegisterRequest request) {
         //create user
@@ -46,7 +49,7 @@ public class UserService {
 
     }
 
-    public void loginUser(LoginRequest request) {
+    public String loginUser(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -59,6 +62,8 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
+
+        return jwtUtil.generateToken(user.getEmail());
     }
     
 }
