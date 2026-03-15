@@ -1,5 +1,6 @@
 package com.darshan.wallet.service;
 
+import com.darshan.wallet.dto.LoginRequest;
 import com.darshan.wallet.dto.RegisterRequest;
 import com.darshan.wallet.entity.User;
 import com.darshan.wallet.entity.Wallet;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,21 @@ public class UserService {
 
         walletRepository.save(wallet);
 
+    }
+
+    public void loginUser(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // check if account is active
+        if (!user.getStatus().equals("ACTIVE")) {
+            throw new RuntimeException("Account is not active");
+        }
+
+        //compare passwords
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
     }
     
 }

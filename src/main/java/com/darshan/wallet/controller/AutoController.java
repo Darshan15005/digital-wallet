@@ -1,5 +1,6 @@
 package com.darshan.wallet.controller;
 
+import com.darshan.wallet.dto.LoginRequest;
 import com.darshan.wallet.dto.RegisterRequest;
 import com.darshan.wallet.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,16 @@ public class AutoController {
         
         return ResponseEntity.ok("User registered successfully");
     }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        userService.loginUser(request);
+
+        return ResponseEntity.ok("Login successful");
+    }
+    
+    
     
     
 }
